@@ -23,23 +23,53 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomePage(title: 'Hello World'),
-    );
+        title: 'Todo List',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const TodoList(
+          title: "Todo List",
+        ));
   }
 }
 
-class HomePage extends StatelessWidget {
+class TodoList extends StatefulWidget {
   final String title;
-  const HomePage({Key? key, required this.title}) : super(key: key);
+  const TodoList({Key? key, required this.title}) : super(key: key);
 
+  @override
+  State<TodoList> createState() => _TodoListState();
+}
+
+class _TodoListState extends State<TodoList> {
+  bool? _isChecked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text(title)),
-    );
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: CheckboxListTile(
+                    title: const Text('Do laundry'),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: _isChecked,
+                    onChanged: (bool? newValue) {
+                      setState(() {
+                        _isChecked = newValue;
+                      });
+                    }),
+              ),
+            ],
+          ),
+        ));
   }
 }
