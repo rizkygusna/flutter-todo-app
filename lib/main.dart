@@ -59,6 +59,7 @@ class _TodoListState extends State<TodoList> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: CheckboxListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 4),
                     title: const Text('Do laundry'),
                     controlAffinity: ListTileControlAffinity.leading,
                     value: _isChecked,
