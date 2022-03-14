@@ -42,7 +42,22 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  bool? _isChecked = false;
+  // style for CheckboxListTile Container
+  final _boxStyle = BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          offset: const Offset(1, 1),
+          blurRadius: 1,
+          spreadRadius: 1,
+        )
+      ]);
+
+  bool? _isChecked1 = false;
+  bool? _isChecked2 = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,18 +69,34 @@ class _TodoListState extends State<TodoList> {
           child: Column(
             children: <Widget>[
               Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                decoration: _boxStyle,
                 child: CheckboxListTile(
+                    dense: true,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                    title: const Text('Do laundry'),
+                    title: const Text('Do laundry',
+                        style: TextStyle(fontSize: 16)),
                     controlAffinity: ListTileControlAffinity.leading,
-                    value: _isChecked,
+                    value: _isChecked1,
                     onChanged: (bool? newValue) {
                       setState(() {
-                        _isChecked = newValue;
+                        _isChecked1 = newValue;
+                      });
+                    }),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                decoration: _boxStyle,
+                child: CheckboxListTile(
+                    dense: true,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                    title: const Text('Buy spinach',
+                        style: TextStyle(fontSize: 16)),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: _isChecked2,
+                    onChanged: (bool? newValue) {
+                      setState(() {
+                        _isChecked2 = newValue;
                       });
                     }),
               ),
