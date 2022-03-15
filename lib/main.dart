@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter/rendering.dart';
+
 // import 'package:firebase_core/firebase_core.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:todo_app/firebase_options.dart';
@@ -42,7 +44,7 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  // style for CheckboxListTile Container
+  // style for Container
   final _boxStyle = BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
@@ -51,12 +53,16 @@ class _TodoListState extends State<TodoList> {
           color: Colors.black.withOpacity(0.2),
           offset: const Offset(1, 1),
           blurRadius: 1,
-          spreadRadius: 1,
+          spreadRadius: 0.5,
         )
       ]);
 
-  bool? _isChecked1 = false;
-  bool? _isChecked2 = false;
+  final List<Map<String, String>> _todos = [
+    {'todo': 'Do laundry', 'isChecked': 'false'},
+    {'todo': 'Call mom', 'isChecked': 'false'},
+    {'todo': 'Book tickets', 'isChecked': 'false'},
+    {'todo': 'Buy bread', 'isChecked': 'false'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -64,44 +70,27 @@ class _TodoListState extends State<TodoList> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 4),
-                decoration: _boxStyle,
-                child: CheckboxListTile(
-                    dense: true,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                    title: const Text('Do laundry',
-                        style: TextStyle(fontSize: 16)),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    value: _isChecked1,
-                    onChanged: (bool? newValue) {
-                      setState(() {
-                        _isChecked1 = newValue;
-                      });
-                    }),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 4),
-                decoration: _boxStyle,
-                child: CheckboxListTile(
-                    dense: true,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                    title: const Text('Buy spinach',
-                        style: TextStyle(fontSize: 16)),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    value: _isChecked2,
-                    onChanged: (bool? newValue) {
-                      setState(() {
-                        _isChecked2 = newValue;
-                      });
-                    }),
-              ),
-            ],
-          ),
-        ));
+        body: ListView(
+            padding: const EdgeInsets.all(8),
+            children: _todos
+                .map((item) => Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      decoration: _boxStyle,
+                      child: CheckboxListTile(
+                          dense: true,
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 4),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          // make sure item['todo'] is not null by using !
+                          title: Text(item['todo']!,
+                              style: const TextStyle(fontSize: 16)),
+                          value: item['isChecked'] == 'true' ? true : false,
+                          onChanged: (bool? val) {
+                            setState(() {
+                              item['isChecked'] = val.toString();
+                            });
+                          }),
+                    ))
+                .toList()));
   }
 }
