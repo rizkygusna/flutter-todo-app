@@ -1,7 +1,5 @@
-// import 'dart:html';
-
 import 'package:flutter/material.dart';
-// import 'package:flutter/rendering.dart';
+import 'dart:developer' as developer;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,16 +12,6 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
-}
-
-class Todo {
-  String todo = '';
-  bool isChecked = false;
-
-  Todo(String todo, bool isChecked) {
-    this.todo;
-    this.isChecked;
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -41,6 +29,14 @@ class MyApp extends StatelessWidget {
           title: "Todo List",
         ));
   }
+}
+
+class Todo {
+  String id;
+  String todo;
+  bool isChecked;
+
+  Todo({required this.id, required this.todo, this.isChecked = false});
 }
 
 class TodoList extends StatefulWidget {
@@ -65,13 +61,10 @@ class _TodoListState extends State<TodoList> {
         )
       ]);
 
-  final List<Map<String, String>> _todos = [
-    {'todo': 'Do laundry', 'isChecked': 'false'},
-    {'todo': 'Call mom', 'isChecked': 'false'},
-    {'todo': 'Book tickets', 'isChecked': 'false'},
-    {'todo': 'Buy bread', 'isChecked': 'false'},
-  ];
-
+  // reference the document from firestore
+  CollectionReference todosCollection =
+      FirebaseFirestore.instance.collection('todos');
+  // get data stream from firestore
   final Stream<QuerySnapshot> _todosStream =
       FirebaseFirestore.instance.collection('todos').snapshots();
 
@@ -89,10 +82,14 @@ class _TodoListState extends State<TodoList> {
           return Scaffold(
             appBar: AppBar(title: Text(widget.title)),
             body: ListView(
+                // get list of DocumentSnapshot
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data() as Map<String, dynamic>;
-              return Text(data['todo']);
+              // convert document fields to Todo object
+              Todo todoItem = Todo(
+                  id: document.id,
+                  todo: document.get('todo'),
+                  isChecked: document.get('isChecked'));
+              return Text(todoItem.todo);
             }).toList()),
           );
         });
