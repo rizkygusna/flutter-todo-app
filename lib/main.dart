@@ -35,7 +35,7 @@ class Todo {
   String id;
   String todo;
   bool isChecked;
-
+  // using named parameter & syntactic sugar for constructor
   Todo({required this.id, required this.todo, this.isChecked = false});
 }
 
@@ -48,7 +48,7 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  // style for Container
+  // style for tile container
   final _boxStyle = BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
@@ -67,6 +67,16 @@ class _TodoListState extends State<TodoList> {
   // get data stream from firestore
   final Stream<QuerySnapshot> _todosStream =
       FirebaseFirestore.instance.collection('todos').snapshots();
+
+  // update document data to firestore
+  Future<void> updateTodo(String id, bool value) {
+    return todosCollection
+        // get document id
+        .doc(id)
+        // update document field
+        .update({'isChecked': value}).catchError(
+            (error) => print('failed to update'));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +99,25 @@ class _TodoListState extends State<TodoList> {
                   id: document.id,
                   todo: document.get('todo'),
                   isChecked: document.get('isChecked'));
-              return Text(todoItem.todo);
+              // return the todo item
+              return CheckboxListTile(
+                  dense: true,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: Text(
+                    todoItem.todo,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  value: todoItem.isChecked,
+                  onChanged: (bool? val) {
+                    setState(() {
+                      // update database
+                      updateTodo(todoItem.id, val!);
+                      // update widget value
+                      todoItem.isChecked = val;
+                    });
+                  });
+              // convert iterable type from map() to list
             }).toList()),
           );
         });
