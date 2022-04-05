@@ -8,6 +8,7 @@ class AuthService {
   // check if user signed in or not, returns user or null
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
+  // SIGN IN METHOD
   Future<String> signIn(
       {required String email, required String password}) async {
     try {
@@ -19,6 +20,7 @@ class AuthService {
     }
   }
 
+  //SIGN UP METHOD
   Future<String> signUp(
       {required String email, required String password}) async {
     try {
@@ -28,5 +30,10 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       return e.message.toString();
     }
+  }
+
+  //SIGN OUT METHOD
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
   }
 }
