@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as dev;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/auth_service.dart';
 import 'package:todo_app/firebase_options.dart';
 
 Future<void> main() async {
@@ -20,16 +23,38 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Todo List',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      // home: const TodoList(
-      //   title: "Todo List",
-      // )
-      home: const AuthWrapper(),
-    );
+    return MultiProvider(
+        providers: [
+          Provider<AuthService>(
+            create: (_) => AuthService(FirebaseAuth.instance),
+          ),
+          StreamProvider(
+            create: (context) => context.read<AuthService>().authStateChanges,
+            initialData: null,
+          )
+        ],
+        child: MaterialApp(
+          title: 'Todo List',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: const AuthWrapper(),
+        ));
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+    if (firebaseUser != null) {
+      return const Text("Signed in");
+    } else {
+      return const Text("Not signed");
+    }
   }
 }
 
@@ -39,15 +64,6 @@ class Todo {
   bool isChecked;
   // using named parameter & syntactic sugar for constructor
   Todo({required this.id, required this.todo, this.isChecked = false});
-}
-
-class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
 }
 
 class TodoList extends StatefulWidget {
