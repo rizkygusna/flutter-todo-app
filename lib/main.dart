@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:developer' as developer;
+import 'dart:developer' as dev;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,13 +21,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Todo List',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const TodoList(
-          title: "Todo List",
-        ));
+      title: 'Todo List',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      // home: const TodoList(
+      //   title: "Todo List",
+      // )
+      home: const AuthWrapper(),
+    );
   }
 }
 
@@ -37,6 +39,15 @@ class Todo {
   bool isChecked;
   // using named parameter & syntactic sugar for constructor
   Todo({required this.id, required this.todo, this.isChecked = false});
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }
 
 class TodoList extends StatefulWidget {
