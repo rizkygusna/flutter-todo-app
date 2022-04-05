@@ -15,18 +15,20 @@ class SignInPage extends StatelessWidget {
         children: [
           TextField(
             controller: emailController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "Email",
             ),
           ),
           TextField(
             controller: passwordController,
-            decoration: InputDecoration(
+            obscureText: true,
+            decoration: const InputDecoration(
               labelText: "Password",
             ),
           ),
           ElevatedButton(
             onPressed: () {
+              // sign in method handler
               context.read<AuthService>().signIn(
                     email: emailController.text.trim(),
                     password: passwordController.text.trim(),

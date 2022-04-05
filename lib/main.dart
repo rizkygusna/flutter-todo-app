@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/auth_service.dart';
 import 'package:todo_app/firebase_options.dart';
+import 'package:todo_app/sign_in_page.dart';
 
 Future<void> main() async {
   // Initialize Firebase
@@ -51,9 +52,9 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
     if (firebaseUser != null) {
-      return const Text("Signed in");
+      return const TodoList(title: 'Todo List');
     } else {
-      return const Text("Not signed");
+      return SignInPage();
     }
   }
 }
