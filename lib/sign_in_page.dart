@@ -8,6 +8,19 @@ class SignInPage extends StatelessWidget {
 
   SignInPage({Key? key}) : super(key: key);
 
+  // progress indicator
+  showProgress(BuildContext context) {
+    AlertDialog loadingAlert = const AlertDialog(
+        content: Center(
+      child: CircularProgressIndicator(),
+    ));
+
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) => loadingAlert);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

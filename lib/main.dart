@@ -118,7 +118,18 @@ class _TodoListState extends State<TodoList> {
             return const Text('Loading..');
           }
           return Scaffold(
-            appBar: AppBar(title: Text(widget.title)),
+            appBar: AppBar(
+              title: Text(widget.title),
+              actions: [
+                // Logout button
+                IconButton(
+                    tooltip: 'Logout',
+                    onPressed: () {
+                      context.read<AuthService>().signOut();
+                    },
+                    icon: const Icon(Icons.logout)),
+              ],
+            ),
             body: ListView(
                 // get list of DocumentSnapshot
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
